@@ -1,0 +1,25 @@
+/* レイアウト用スタイル */
+.boxwrap{
+    margin:40px auto;
+    width:800px;
+    padding:20px 60px;
+    border:1px solid #ddd;
+    background-color: #efefef;
+  }
+  .wrap{
+      margin: auto;
+      width: 600px;
+      background-color: #7178a7;
+      color: #fff;
+      border-radius: 5px;
+  }
+  
+  .mgb-20{
+    margin-bottom: 20px;
+  }
+  
+  /* ①text-alignとpaddingで中央配置 */
+  .wrap.pattern-1{
+    text-align:justify;
+    padding:60px;
+  }

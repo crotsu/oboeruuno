@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="boxwrap">
+    <h2>残りの問題数:{{ rest_count }}</h2>
+    <h3>{{ title }}</h3>
+    <div class="wrap pattern-1 mgb-20"> 
+        <h1>{{ message }}</h1>
+    </div>
+</div>
+
+<div class="boxwrap">
+<form action="question" method="POST" enctype="multipart/form-data">
+    <div>
+        <label for="r1">正解：</label>
+        <input type="radio" id="r1" name="radio" value="1">
+    </div>
+    <div>
+        <label for="r2">不安：</label>
+        <input type="radio" id="r2" name="radio" value="2">
+    </div>
+    <div>
+        <label for="r3">不正解：</label>
+        <input type="radio" id="r3" name="radio" value="3">
+    </div>
+    <div>
+        <input type="submit" value="送信">
+    </div>
+</form>
+</div>
+{% endblock %}

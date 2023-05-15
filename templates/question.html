@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<div class="boxwrap">
+    <h2>残りの問題数:{{ rest_count }}</h2>
+    <h3>{{ title }}</h3>
+    <div class="wrap pattern-1 mgb-20"> 
+        <h1>{{ message }}</h1>
+    </div>
+</div>
+
+<div class="boxwrap">
+    <a href="answer">
+        <button type="button">解答を見る</button>
+    </a>
+</div>
+{% endblock %}
