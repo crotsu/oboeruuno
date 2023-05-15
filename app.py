@@ -96,7 +96,7 @@ def load_item_data(file_name):
 if __name__ == "__main__":
     file_name = "../englishbook_data/80patterns.txt"
     item_data = load_item_data(file_name)
-    username = 'post'
+    username = 'oeda'
     set_table_name(Post, username)
 
     app.run(debug=True)
