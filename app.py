@@ -19,12 +19,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-REST_COUNT = 5
+REST_COUNT = 10
 item = []
-item_id = random.randint(1,210)
+item_id = random.randint(1,211)
 battle_point = 192012
 rest_count = REST_COUNT
-        
+item_set = []
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     book_name = db.Column(db.String(256), nullable=False)
@@ -45,6 +46,7 @@ def index():
 @app.route('/question', methods=['GET', 'POST'])
 def question():
     global item_id
+    global item_set
     if request.method == 'POST':
         post = Post.query.get(item_id)
         radio = request.form.get('radio')
@@ -58,15 +60,19 @@ def question():
             post.mistake_ct = post.mistake_ct + 1
         db.session.add(post)
         db.session.commit()
-    
-        item_id = random.randint(1,210)
+        print("##########################")
+        print(item_set)
+        item_id = random.choice(item_set)
+        print(item_id)
         item = item_data[item_id]
         
         if radio=='1': #正解1, 不正解2
             global rest_count
+            item_set.remove(item_id)
             rest_count -= 1
             
         if rest_count==0:
+            item_set = random.sample(range(1, 211), REST_COUNT)
             return render_template('index.html', title = 'oboeruuno', battle_point = battle_point)
  
     else:
@@ -94,6 +100,7 @@ if __name__ == "__main__":
     item_data = load_item_data(file_name)
     username = 'oeda'
     set_table_name(Post, username)
+    item_set = random.sample(range(1, 211), REST_COUNT)
 
     app.run(debug=True)
 
