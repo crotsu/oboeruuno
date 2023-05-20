@@ -8,22 +8,19 @@
 # .schema oeda
 # select * from oeda;
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, g
 from flask_sqlalchemy import SQLAlchemy
 import csv
 import random
+
+REST_COUNT = 10 # 1回の問題数
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///score.sqlite'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-
-REST_COUNT = 10
-item = []
 item_id = random.randint(1,211)
-battle_point = 192012
-rest_count = REST_COUNT
 item_set = []
 
 class Post(db.Model):
@@ -41,6 +38,8 @@ def set_table_name(model, table_name):
     
 @app.route('/')
 def index():
+    global item_set
+    item_set = random.sample(range(1, 211), REST_COUNT)
     return render_template('index.html', title = 'oboeruuno', battle_point = battle_point)
 
 @app.route('/question', methods=['GET', 'POST'])
@@ -72,8 +71,7 @@ def question():
             rest_count -= 1
             
         if rest_count==0:
-            item_set = random.sample(range(1, 211), REST_COUNT)
-            return render_template('index.html', title = 'oboeruuno', battle_point = battle_point)
+            return redirect('/')
  
     else:
         rest_count = REST_COUNT
@@ -100,17 +98,7 @@ if __name__ == "__main__":
     item_data = load_item_data(file_name)
     username = 'oeda'
     set_table_name(Post, username)
-    item_set = random.sample(range(1, 211), REST_COUNT)
+    battle_point = 234
+    rest_count = REST_COUNT
 
     app.run(debug=True)
-
-
-
-
-
-'''    
-# アプリケーションコンテキストを設定してデータベースを作成
-from app import app, db
-with app.app_context():
-  db.create_all()
-'''
