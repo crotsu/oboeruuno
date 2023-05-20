@@ -19,10 +19,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+REST_COUNT = 5
 item = []
 item_id = random.randint(1,210)
 battle_point = 192012
-rest_count = 0
+rest_count = REST_COUNT
         
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,14 +46,8 @@ def index():
 def question():
     global item_id
     if request.method == 'POST':
-        print("##########")
-        #post = db.session.get(Post, 10)
         post = Post.query.get(item_id)
-        print(post)
-        print("@@@@@@@@@@")
         radio = request.form.get('radio')
-        print(radio)
-        print(type(radio))
 
         post.question_ct = post.question_ct + 1
         if radio=='1':
@@ -65,7 +60,6 @@ def question():
         db.session.commit()
     
         item_id = random.randint(1,210)
-        item_id = 200
         item = item_data[item_id]
         
         if radio=='1': #正解1, 不正解2
@@ -76,14 +70,15 @@ def question():
             return render_template('index.html', title = 'oboeruuno', battle_point = battle_point)
  
     else:
-        rest_count = 10
+        rest_count = REST_COUNT
         item = item_data[item_id]
     return render_template('question.html', title = '出題（日本語）', message = item[1], rest_count = rest_count)
 
 @app.route('/answer')
 def answer():
+    post = Post.query.get(item_id)
     item = item_data[item_id]
-    return render_template('answer.html', title = '解答（英語）', message = item[2], rest_count = rest_count)
+    return render_template('answer.html', title = '解答（英語）', message = item[2], rest_count = rest_count, book_name=book_name, number=item[0], accuracy=post.answer_ct/(post.question_ct+1), question_ct=post.question_ct, answer_ct=post.answer_ct, anxiety_ct=post.anxiety_ct, mistake_ct=post.mistake_ct)
 
 def load_item_data(file_name):
     data = []
@@ -94,7 +89,8 @@ def load_item_data(file_name):
     return data
 
 if __name__ == "__main__":
-    file_name = "../englishbook_data/80patterns.txt"
+    book_name = "80patterns.txt"    
+    file_name = "../englishbook_data/"+book_name
     item_data = load_item_data(file_name)
     username = 'oeda'
     set_table_name(Post, username)
